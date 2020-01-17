@@ -1,4 +1,4 @@
-package com.example.demo.srapper;
+package com.example.demo.scrapper;
 
 import com.example.demo.model.Seller;
 

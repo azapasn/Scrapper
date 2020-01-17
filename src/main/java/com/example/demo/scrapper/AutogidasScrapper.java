@@ -1,4 +1,4 @@
-package com.example.demo.srapper;
+package com.example.demo.scrapper;
 
 import com.example.demo.model.Advertisement;
 import com.example.demo.model.CarParam;
@@ -64,6 +64,7 @@ public class AutogidasScrapper implements Scrapper {
     private Advertisement getAdvertisement() {
         Advertisement advertisement = new Advertisement();
         advertisement.setLink(link);
+        advertisement.setPrice(scrapPrice());
         return advertisement;
     }
 
@@ -78,5 +79,11 @@ public class AutogidasScrapper implements Scrapper {
             carParams.add(carParam);
         }
         return carParams;
+    }
+    private int scrapPrice(){
+        String priceString = doc.getElementsByClass("price").first().ownText();
+        return Integer.parseInt(priceString
+                .replace("€", "")
+                .replace(" ", ""));
     }
 }

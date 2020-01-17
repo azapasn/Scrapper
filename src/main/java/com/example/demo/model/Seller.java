@@ -10,12 +10,12 @@ import java.util.List;
 @Data
 public class Seller {
     @Id
-    @Column(name = "phone_number")
+    @Column
     private String phoneNumber;
     @Column
     private String sellerLocation;
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
-    private List<Advertisement> advertisements = new ArrayList<Advertisement>();
+    private List<Advertisement> advertisements = new ArrayList<>();
 
     public Seller() {
     }

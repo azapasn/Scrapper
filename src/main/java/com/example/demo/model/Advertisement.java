@@ -15,8 +15,18 @@ public class Advertisement {
     @JsonIgnore
     @ManyToOne
     private Seller seller;
+    private int price;
+
     @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL)
-    private List<CarParam> carParams = new ArrayList<CarParam>();
+    private List<CarParam> carParams = new ArrayList<>();
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
 
 
     public String getLink() {

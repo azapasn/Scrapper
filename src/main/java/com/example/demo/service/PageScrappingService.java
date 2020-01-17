@@ -6,11 +6,9 @@ import com.example.demo.model.Seller;
 import com.example.demo.repository.AdvertisementRepository;
 import com.example.demo.repository.CarParamRepository;
 import com.example.demo.repository.SellersRepository;
-import com.example.demo.srapper.AutogidasScrapper;
-import com.example.demo.srapper.Scrapper;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import com.example.demo.scrapper.AutogidasScrapper;
+import com.example.demo.scrapper.Scrapper;
+import com.example.demo.scrapper.ScrapperFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -31,7 +29,7 @@ public class PageScrappingService {
 
     public Seller scrap(String link) throws IOException {
         Seller sellerToSave;
-        Scrapper scrapper = new AutogidasScrapper(link);
+        Scrapper scrapper = ScrapperFactory.getScrapperByLink(link);
         Seller seller = scrapper.scrapSeller();
         Optional<Seller> sellerFromDatabase = sellersRepository.findById(seller.getPhoneNumber());
         if (sellerFromDatabase.isPresent() && sellerFromDatabase.get().getPhoneNumber().equals(seller.getPhoneNumber())) {
@@ -54,7 +52,6 @@ public class PageScrappingService {
         return sellersRepository.save(seller);
     }
     public List<Seller> getData(){
-        List<Seller> sellers = sellersRepository.findAll();
-        return sellers;
+        return sellersRepository.findAll();
     }
 }
