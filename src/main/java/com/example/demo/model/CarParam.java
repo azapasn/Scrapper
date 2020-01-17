@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,8 +16,8 @@ public class CarParam {
     private String name;
     @Column
     private String value;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "advertisment_id")
+    @JsonIgnore
+    @ManyToOne
     private Advertisement advertisement;
 
     public CarParam(String name, String value) {

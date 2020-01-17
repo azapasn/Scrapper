@@ -42,16 +42,14 @@ public class PageScrappingService {
         return saveAll(sellerToSave);
     }
     private Seller saveAll(Seller seller){
+
         List<Advertisement> advertisementToSave = seller.getAdvertisements();
         for (Advertisement advertisement: advertisementToSave) {
+            advertisement.setSeller(seller);
             List<CarParam> carParams = advertisement.getCarParams();
             for (CarParam carParam : carParams) {
                  carParam.setAdvertisement(advertisement);
             }
-            carParamRepository.saveAll(carParams);
-            advertisement.setSeller(seller);
-            advertisementRepository.save(advertisement);
-
         }
         return sellersRepository.save(seller);
     }

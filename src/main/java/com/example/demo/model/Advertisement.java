@@ -1,7 +1,9 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -10,11 +12,11 @@ public class Advertisement {
     @Id
     @Column
     private String link;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    //@JoinColumn(name = "seller_id")
+    @JsonIgnore
+    @ManyToOne
     private Seller seller;
-    @OneToMany(mappedBy = "advertisement")
-    private List<CarParam> carParams;
+    @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL)
+    private List<CarParam> carParams = new ArrayList<CarParam>();
 
 
     public String getLink() {

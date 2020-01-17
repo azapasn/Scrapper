@@ -2,22 +2,20 @@ package com.example.demo.model;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
 public class Seller {
     @Id
-    @Column
+    @Column(name = "phone_number")
     private String phoneNumber;
     @Column
     private String sellerLocation;
-    @OneToMany(mappedBy = "seller")
-    private List<Advertisement> advertisements;
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    private List<Advertisement> advertisements = new ArrayList<Advertisement>();
 
     public Seller() {
     }
