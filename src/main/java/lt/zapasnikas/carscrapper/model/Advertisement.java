@@ -18,7 +18,7 @@ public class Advertisement {
     private Seller seller;
     private int price;
 
-    @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CarParam> carParams = new ArrayList<>();
 
     public int getPrice() {

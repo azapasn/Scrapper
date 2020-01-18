@@ -14,7 +14,7 @@ public class Seller {
     private String phoneNumber;
     @Column
     private String sellerLocation;
-    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Advertisement> advertisements = new ArrayList<>();
 
     public Seller() {
@@ -46,5 +46,10 @@ public class Seller {
 
     public void setAdvertisements(List<Advertisement> advertisements) {
         this.advertisements = advertisements;
+    }
+
+    @Override
+    public String toString() {
+        return phoneNumber + " " + sellerLocation;
     }
 }
