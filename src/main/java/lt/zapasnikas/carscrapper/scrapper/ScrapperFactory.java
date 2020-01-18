@@ -1,4 +1,4 @@
-package com.example.demo.scrapper;
+package lt.zapasnikas.carscrapper.scrapper;
 
 
 import java.io.IOException;

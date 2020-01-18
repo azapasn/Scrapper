@@ -1,6 +1,6 @@
-package com.example.demo.scrapper;
+package lt.zapasnikas.carscrapper.scrapper;
 
-import com.example.demo.model.Seller;
+import lt.zapasnikas.carscrapper.model.Seller;
 
 public interface Scrapper {
     Seller scrap(String link);

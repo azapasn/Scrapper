@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package lt.zapasnikas.carscrapper.model;
 
 import lombok.Data;
 

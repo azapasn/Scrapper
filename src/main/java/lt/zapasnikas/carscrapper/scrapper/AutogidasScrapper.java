@@ -1,8 +1,8 @@
-package com.example.demo.scrapper;
+package lt.zapasnikas.carscrapper.scrapper;
 
-import com.example.demo.model.Advertisement;
-import com.example.demo.model.CarParam;
-import com.example.demo.model.Seller;
+import lt.zapasnikas.carscrapper.model.Advertisement;
+import lt.zapasnikas.carscrapper.model.CarParam;
+import lt.zapasnikas.carscrapper.model.Seller;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

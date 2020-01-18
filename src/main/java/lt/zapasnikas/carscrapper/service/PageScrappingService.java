@@ -1,14 +1,13 @@
-package com.example.demo.service;
+package lt.zapasnikas.carscrapper.service;
 
-import com.example.demo.model.Advertisement;
-import com.example.demo.model.CarParam;
-import com.example.demo.model.Seller;
-import com.example.demo.repository.AdvertisementRepository;
-import com.example.demo.repository.CarParamRepository;
-import com.example.demo.repository.SellersRepository;
-import com.example.demo.scrapper.AutogidasScrapper;
-import com.example.demo.scrapper.Scrapper;
-import com.example.demo.scrapper.ScrapperFactory;
+import lt.zapasnikas.carscrapper.model.Advertisement;
+import lt.zapasnikas.carscrapper.model.CarParam;
+import lt.zapasnikas.carscrapper.model.Seller;
+import lt.zapasnikas.carscrapper.repository.AdvertisementRepository;
+import lt.zapasnikas.carscrapper.repository.CarParamRepository;
+import lt.zapasnikas.carscrapper.repository.SellersRepository;
+import lt.zapasnikas.carscrapper.scrapper.Scrapper;
+import lt.zapasnikas.carscrapper.scrapper.ScrapperFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

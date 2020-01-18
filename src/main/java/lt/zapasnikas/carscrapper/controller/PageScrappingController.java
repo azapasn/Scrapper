@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package lt.zapasnikas.carscrapper.controller;
 
-import com.example.demo.model.Seller;
-import com.example.demo.service.PageScrappingService;
+import lt.zapasnikas.carscrapper.model.Seller;
+import lt.zapasnikas.carscrapper.service.PageScrappingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +23,7 @@ public class PageScrappingController {
     @PostMapping("/page")
     public ResponseEntity<Seller> scrap(@PathParam("link") String link) throws IOException {
         Seller seller = pageScrappingService.scrap(link);
-        return new ResponseEntity<Seller>(seller, HttpStatus.OK);
+        return new ResponseEntity<>(seller, HttpStatus.OK);
     }
     @GetMapping("/get")
     public ResponseEntity<List<Seller>> getSellers(){

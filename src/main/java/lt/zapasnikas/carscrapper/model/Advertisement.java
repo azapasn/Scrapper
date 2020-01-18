@@ -1,7 +1,8 @@
-package com.example.demo.model;
+package lt.zapasnikas.carscrapper.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

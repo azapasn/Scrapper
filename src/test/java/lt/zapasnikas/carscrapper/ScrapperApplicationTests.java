@@ -1,9 +1,7 @@
-package com.example.demo;
+package lt.zapasnikas.carscrapper;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 class ScrapperApplicationTests {
 
 	@Test

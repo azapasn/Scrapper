@@ -1,6 +1,6 @@
-package com.example.demo.repository;
+package lt.zapasnikas.carscrapper.repository;
 
-import com.example.demo.model.Advertisement;
+import lt.zapasnikas.carscrapper.model.Advertisement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
