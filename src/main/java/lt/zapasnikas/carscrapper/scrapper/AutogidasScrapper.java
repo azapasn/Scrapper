@@ -65,17 +65,59 @@ public class AutogidasScrapper implements Scrapper {
         Advertisement advertisement = new Advertisement();
         advertisement.setLink(link);
         advertisement.setPrice(scrapPrice());
+        advertisement.setId(scrapId());
         return advertisement;
+    }
+
+    private String scrapId() {
+        return doc.getElementsByClass("times-item-right").last().ownText();
     }
 
     private List<CarParam> scrapParams() {
         List<CarParam> carParams = new ArrayList<>();
         Element paramBlockElement = doc.getElementsByClass("params-block").last();
         Elements paramsElements = paramBlockElement.getElementsByClass("param");
-        for (Element element: paramsElements) {
+        CarParam carParam = new CarParam();
+        for (Element element : paramsElements) {
             String paramName = element.getElementsByClass("left").first().ownText();
             String paramValue = element.getElementsByClass("right").first().ownText();
-            CarParam carParam = new CarParam(paramName, paramValue);
+            switch (paramName) {
+                case "Markė":
+                    carParam.setMake(paramValue);
+                    break;
+                case "Modelis":
+                    carParam.setModel(paramValue);
+                    break;
+                case "Metai":
+                    carParam.setYears(paramValue);
+                    break;
+                case "Variklis":
+                    carParam.setEngine(paramValue);
+                    break;
+                case "Kuro tipas":
+                    carParam.setFuelType(paramValue);
+                    break;
+                case "Spalva":
+                    carParam.setColor(paramValue);
+                    break;
+                case "Rida, km":
+                    carParam.setMileageKm(paramValue);
+                    break;
+                case "Varomieji ratai":
+                    carParam.setDriveTrain(paramValue);
+                    break;
+                case "Defektai":
+                    carParam.setDefects(paramValue);
+                    break;
+                case "VIN kodas":
+                    carParam.setVinCode(paramValue);
+                    break;
+                case "Pirmosios registracijos šalis":
+                    carParam.setFirstRegistrationCountry(paramValue);
+                    break;
+                default:
+                    break;
+            }
             carParams.add(carParam);
         }
         return carParams;

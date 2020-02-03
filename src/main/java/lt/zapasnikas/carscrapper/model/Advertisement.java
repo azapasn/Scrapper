@@ -12,6 +12,8 @@ import java.util.List;
 public class Advertisement {
     @Id
     @Column
+    private String Id;
+    @Column
     private String link;
     @JsonIgnore
     @ManyToOne
@@ -27,6 +29,14 @@ public class Advertisement {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        this.Id = id;
     }
 
 
@@ -52,5 +62,9 @@ public class Advertisement {
 
     public void setCarParams(List<CarParam> carParams) {
         this.carParams = carParams;
+    }
+
+    public String toString() {
+        return getId();
     }
 }
