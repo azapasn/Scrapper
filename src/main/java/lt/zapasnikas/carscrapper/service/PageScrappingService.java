@@ -36,7 +36,7 @@ public class PageScrappingService {
         } else {
             sellerToSave = scrapper.scrap(link);
         }
-        return saveAll(sellerToSave);
+        return sellerToSave;
     }
     private Seller saveAll(Seller seller){
 

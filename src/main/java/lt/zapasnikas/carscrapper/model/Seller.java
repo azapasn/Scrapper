@@ -48,6 +48,10 @@ public class Seller {
         this.advertisements = advertisements;
     }
 
+    public void addAdvertisement(Advertisement advertisement) {
+        this.advertisements.add((advertisement));
+    }
+
     @Override
     public String toString() {
         return phoneNumber + " " + sellerLocation;

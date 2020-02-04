@@ -28,12 +28,10 @@ public class AutogidasScrapper implements Scrapper {
         List<CarParam> carParams = scrapParams();
 
         Advertisement advertisement = getAdvertisement();
-        advertisement.setCarParams(carParams);
+        advertisement.setCarParams(carParam);
 
-        List<Advertisement> advertisements = new ArrayList<>();
-        advertisements.add(advertisement);
 
-        seller.setAdvertisements(advertisements);
+        seller.addAdvertisement(advertisement);
 
         return seller;
     }
@@ -56,7 +54,9 @@ public class AutogidasScrapper implements Scrapper {
     public Seller scrapSeller() {
         Element phoneNumberElement = doc.getElementsByClass("seller-ico seller-phones btn-action").first();
         Element sellerLocationElement = doc.getElementsByClass("seller-ico seller-btn seller-location").first();
-        String phoneNumber = phoneNumberElement.ownText();
+        String phoneNumber = phoneNumberElement.ownText()
+                .replace(" ", "")
+                .replace("+370", "");
         String sellerLocation = sellerLocationElement.ownText();
         return new Seller(phoneNumber, sellerLocation);
     }
