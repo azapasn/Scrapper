@@ -1,4 +1,4 @@
-package lt.zapasnikas.carscrapper.model;
+package lt.zapasnikas.carscraper.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -13,7 +13,7 @@ public class CarParam {
     @Column
     private long id;
     @JsonIgnore
-    @ManyToOne
+    @OneToOne
     private Advertisement advertisement;
     @Column
     private String make;

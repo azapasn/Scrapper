@@ -1,4 +1,4 @@
-package lt.zapasnikas.carscrapper.model;
+package lt.zapasnikas.carscraper.model;
 
 import lombok.Data;
 

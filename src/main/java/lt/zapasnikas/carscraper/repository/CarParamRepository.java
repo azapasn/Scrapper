@@ -1,6 +1,6 @@
-package lt.zapasnikas.carscrapper.repository;
+package lt.zapasnikas.carscraper.repository;
 
-import lt.zapasnikas.carscrapper.model.CarParam;
+import lt.zapasnikas.carscraper.model.CarParam;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

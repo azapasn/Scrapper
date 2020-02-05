@@ -1,8 +1,8 @@
-package lt.zapasnikas.carscrapper.scrapper;
+package lt.zapasnikas.carscraper.scraper;
 
-import lt.zapasnikas.carscrapper.model.Advertisement;
-import lt.zapasnikas.carscrapper.model.CarParam;
-import lt.zapasnikas.carscrapper.model.Seller;
+import lt.zapasnikas.carscraper.model.Advertisement;
+import lt.zapasnikas.carscraper.model.CarParam;
+import lt.zapasnikas.carscraper.model.Seller;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,12 +15,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AutopliusScrapper implements Scrapper {
-    private final static Logger LOG = LoggerFactory.getLogger(AutopliusScrapper.class);
+public class AutopliusScraper implements Scraper {
+    private final static Logger LOG = LoggerFactory.getLogger(AutopliusScraper.class);
+    private final String PAGELINK = "?page=";
+
     Document doc;
     String link;
 
-    public AutopliusScrapper(String link) {
+    public AutopliusScraper(String link) {
         this.link = link;
         try {
             doc = Jsoup.connect(link).get();
@@ -65,32 +67,50 @@ public class AutopliusScrapper implements Scrapper {
     public Seller scrapSeller() {
         Element phoneNumberElement = doc.getElementsByClass("owner-phone").first();
         Element sellerLocationElement = doc.getElementsByClass("owner-location").first();
-        String phoneNumber = phoneNumberElement.ownText();
-        String sellerLocation = sellerLocationElement.ownText();
+        String phoneNumber;
+        String sellerLocation;
+        try {
+            phoneNumber = phoneNumberElement.text()
+                    .replace(" ", "");
+            sellerLocation = sellerLocationElement.text();
+
+        } catch (NullPointerException e) {
+            phoneNumber = "unknown";
+            sellerLocation = "unknown";
+        }
         return new Seller(phoneNumber, sellerLocation);
     }
 
     @Override
     public List<String> scrapAdvertisementLinks(String link) throws IOException {
         List<String> advertisementLinks = new ArrayList<>();
+        int pageCount = 1;
         String nextPageLink = link;
         do {
             doc = Jsoup.connect(nextPageLink).get();
-            nextPageLink = getLinkToNextAdvertismentPage();
+            nextPageLink = null;
+            if (nextPageHasAdvertisements(link, pageCount++)) {
+                nextPageLink = link + PAGELINK + pageCount;
+            }
             advertisementLinks.addAll(scrapAdvertisementLinksOnThePage());
-        } while (nextPageLink != null);
+        } while (nextPageLink != null && pageCount < 5);
 
         return advertisementLinks;
     }
 
-    private String getLinkToNextAdvertismentPage() {
-        //get next page link else return null
-        return null;
+    private boolean nextPageHasAdvertisements(String link, int i) throws IOException {
+        Document tempDoc = Jsoup.connect(link + PAGELINK + i).get();
+        return !tempDoc.getElementsByClass("announcement-item").isEmpty();
     }
 
+
     private List<String> scrapAdvertisementLinksOnThePage() {
-        //get all ad links
-        return null;
+        List<String> linksToScrap = new ArrayList<>();
+        Elements tempElements = doc.getElementsByClass("announcement-item");
+        for (Element tempElement : tempElements) {
+            linksToScrap.add(tempElement.getElementsByAttribute("href").attr("href"));
+        }
+        return linksToScrap;
     }
 
     private Advertisement getAdvertisement() {
@@ -102,7 +122,7 @@ public class AutopliusScrapper implements Scrapper {
     }
 
     private String scrapId() {
-        return doc.getElementsByClass("announcement-id").last().ownText()
+        return doc.getElementsByClass("announcement-id").last().text()
                 .replace("ID: ", "");
     }
 
@@ -116,11 +136,16 @@ public class AutopliusScrapper implements Scrapper {
         CarParam carParams = new CarParam();
         Elements paramsElements = doc.getElementsByClass("parameter-row");
         for (Element element : paramsElements) {
-            if (element.className().contains("carvertical")) {
-                break;
+            String paramName;
+            String paramValue;
+            try {
+                paramName = element.getElementsByClass("parameter-label").first().ownText();
+                paramValue = element.getElementsByClass("parameter-value").first().ownText();
+
+            } catch (NullPointerException e) {
+                paramName = "ERROR";
+                paramValue = "ERROR";
             }
-            String paramName = element.getElementsByClass("parameter-label").first().ownText();
-            String paramValue = element.getElementsByClass("parameter-value").first().ownText();
             switch (paramName) {
                 case "Markė":
                     carParams.setMake(paramValue);

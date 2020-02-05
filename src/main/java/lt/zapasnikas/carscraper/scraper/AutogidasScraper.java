@@ -1,31 +1,42 @@
-package lt.zapasnikas.carscrapper.scrapper;
+package lt.zapasnikas.carscraper.scraper;
 
-import lt.zapasnikas.carscrapper.model.Advertisement;
-import lt.zapasnikas.carscrapper.model.CarParam;
-import lt.zapasnikas.carscrapper.model.Seller;
+import lt.zapasnikas.carscraper.model.Advertisement;
+import lt.zapasnikas.carscraper.model.CarParam;
+import lt.zapasnikas.carscraper.model.Seller;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class AutogidasScrapper implements Scrapper {
-    Document doc;
-    String link;
+public class AutogidasScraper implements Scraper {
+    private final static Logger LOG = LoggerFactory.getLogger(AutogidasScraper.class);
+    private final String PAGELINK = "?page=";
 
-    public AutogidasScrapper(String link) throws IOException {
+    private Document doc;
+    private String link;
+
+    public AutogidasScraper(String link) {
         this.link = link;
-        doc = Jsoup.connect(link).get();
+        try {
+            doc = Jsoup.connect(link).get();
+        } catch (IOException e) {
+            LOG.error("Couldn't get a {} page with jsoup\n" + Arrays.toString(e.getStackTrace()), link);
+            throw new RuntimeException();
+        }
     }
 
     @Override
-    public Seller scrap(String link) {
+    public Seller scrapAdvertisement(String link) {
         Seller seller = scrapSeller();
 
-        List<CarParam> carParams = scrapParams();
+        CarParam carParam = scrapParams();
 
         Advertisement advertisement = getAdvertisement();
         advertisement.setCarParams(carParam);
@@ -37,11 +48,11 @@ public class AutogidasScrapper implements Scrapper {
     }
 
     @Override
-    public Seller scrap(String link, Seller seller) {
-        List<CarParam> carParams = scrapParams();
+    public Seller scrapAdvertisement(String link, Seller seller) {
+        CarParam carParam = scrapParams();
 
         Advertisement advertisement = getAdvertisement();
-        advertisement.setCarParams(carParams);
+        advertisement.setCarParams(carParam);
 
         List<Advertisement> advertisements = seller.getAdvertisements();
         advertisements.add(advertisement);
@@ -51,14 +62,53 @@ public class AutogidasScrapper implements Scrapper {
         return seller;
     }
 
+    @Override
     public Seller scrapSeller() {
         Element phoneNumberElement = doc.getElementsByClass("seller-ico seller-phones btn-action").first();
         Element sellerLocationElement = doc.getElementsByClass("seller-ico seller-btn seller-location").first();
-        String phoneNumber = phoneNumberElement.ownText()
-                .replace(" ", "")
-                .replace("+370", "");
-        String sellerLocation = sellerLocationElement.ownText();
+        String phoneNumber;
+        String sellerLocation;
+        try {
+            phoneNumber = phoneNumberElement.ownText()
+                    .replace(" ", "");
+            sellerLocation = sellerLocationElement.ownText();
+
+        } catch (NullPointerException e) {
+            phoneNumber = "unknown";
+            sellerLocation = "unknown";
+        }
         return new Seller(phoneNumber, sellerLocation);
+    }
+
+    @Override
+    public List<String> scrapAdvertisementLinks(String link) throws IOException {
+        List<String> advertisementLinks = new ArrayList<>();
+        int pageCount = 1;
+        String nextPageLink = link;
+        do {
+            doc = Jsoup.connect(nextPageLink).get();
+            nextPageLink = null;
+            if (nextPageHasAdvertisements(link, pageCount++)) {
+                nextPageLink = link + PAGELINK + pageCount;
+            }
+            advertisementLinks.addAll(scrapAdvertisementLinksOnThePage());
+        } while (nextPageLink != null && pageCount < 3);
+
+        return advertisementLinks;
+    }
+
+    private boolean nextPageHasAdvertisements(String link, int i) throws IOException {
+        Document tempDoc = Jsoup.connect(link + PAGELINK + i).get();
+        return !tempDoc.getElementsByClass("list-item").isEmpty();
+    }
+
+    private List<String> scrapAdvertisementLinksOnThePage() {
+        List<String> linksToScrap = new ArrayList<>();
+        Elements tempElements = doc.getElementsByClass("list-item");
+        for (Element tempElement : tempElements) {
+            linksToScrap.add("https://autogidas.lt/skelbimas" + tempElement.getElementsByAttribute("href").attr("href"));
+        }
+        return linksToScrap;
     }
 
     private Advertisement getAdvertisement() {
@@ -73,11 +123,11 @@ public class AutogidasScrapper implements Scrapper {
         return doc.getElementsByClass("times-item-right").last().ownText();
     }
 
-    private List<CarParam> scrapParams() {
-        List<CarParam> carParams = new ArrayList<>();
+    private CarParam scrapParams() {
         Element paramBlockElement = doc.getElementsByClass("params-block").last();
         Elements paramsElements = paramBlockElement.getElementsByClass("param");
         CarParam carParam = new CarParam();
+
         for (Element element : paramsElements) {
             String paramName = element.getElementsByClass("left").first().ownText();
             String paramValue = element.getElementsByClass("right").first().ownText();
@@ -118,10 +168,10 @@ public class AutogidasScrapper implements Scrapper {
                 default:
                     break;
             }
-            carParams.add(carParam);
         }
-        return carParams;
+        return carParam;
     }
+
     private int scrapPrice(){
         String priceString = doc.getElementsByClass("price").first().ownText();
         return Integer.parseInt(priceString

@@ -1,11 +1,9 @@
-package lt.zapasnikas.carscrapper.model;
+package lt.zapasnikas.carscraper.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Data
@@ -20,8 +18,9 @@ public class Advertisement {
     private Seller seller;
     private int price;
 
-    @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<CarParam> carParams = new ArrayList<>();
+
+    @OneToOne(mappedBy = "advertisement", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private CarParam carParam;
 
     public int getPrice() {
         return price;
@@ -56,15 +55,16 @@ public class Advertisement {
         this.seller = seller;
     }
 
-    public List<CarParam> getCarParams() {
-        return carParams;
+    public CarParam getCarParam() {
+        return carParam;
     }
 
-    public void setCarParams(List<CarParam> carParams) {
-        this.carParams = carParams;
+    public void setCarParams(CarParam carParam) {
+        this.carParam = carParam;
     }
 
     public String toString() {
         return getId();
     }
+
 }

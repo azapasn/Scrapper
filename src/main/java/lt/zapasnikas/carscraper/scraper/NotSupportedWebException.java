@@ -1,4 +1,4 @@
-package lt.zapasnikas.carscrapper.scrapper;
+package lt.zapasnikas.carscraper.scraper;
 
 public class NotSupportedWebException extends RuntimeException{
     public NotSupportedWebException() {

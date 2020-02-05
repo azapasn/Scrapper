@@ -1,10 +1,10 @@
-package lt.zapasnikas.carscrapper.service;
+package lt.zapasnikas.carscraper.service;
 
 import com.google.common.truth.Truth;
-import lt.zapasnikas.carscrapper.model.Seller;
-import lt.zapasnikas.carscrapper.repository.AdvertisementRepository;
-import lt.zapasnikas.carscrapper.repository.CarParamRepository;
-import lt.zapasnikas.carscrapper.repository.SellersRepository;
+import lt.zapasnikas.carscraper.model.Seller;
+import lt.zapasnikas.carscraper.repository.AdvertisementRepository;
+import lt.zapasnikas.carscraper.repository.CarParamRepository;
+import lt.zapasnikas.carscraper.repository.SellersRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
@@ -20,9 +20,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
-class PageScrappingServiceTest {
+class PageScrapingServiceTest {
     @InjectMocks
-    private PageScrappingService pageScrappingService;
+    private PageScrapingService pageScrapingService;
     @Mock
     private SellersRepository sellersRepository;
     @Mock
@@ -37,7 +37,7 @@ class PageScrappingServiceTest {
         List<Seller> retList = Arrays.asList(seller1, seller2);
         when(sellersRepository.findAll()).thenReturn(retList);
 
-        List<Seller> result = pageScrappingService.getData();
+        List<Seller> result = pageScrapingService.getData();
 
         Truth.assertThat(result).isEqualTo(retList);
         verify(sellersRepository, times(1)).findAll();
