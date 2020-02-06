@@ -17,7 +17,7 @@ import java.util.List;
 
 public class AutopliusScraper implements Scraper {
     private final static Logger LOG = LoggerFactory.getLogger(AutopliusScraper.class);
-    private final String PAGELINK = "?page=";
+    private final String PAGELINK = "?page_nr=";
 
     Document doc;
     String link;
@@ -84,23 +84,21 @@ public class AutopliusScraper implements Scraper {
     @Override
     public List<String> scrapAdvertisementLinks(String link) throws IOException {
         List<String> advertisementLinks = new ArrayList<>();
-        int pageCount = 1;
-        String nextPageLink = link;
-        do {
+        int pageCount = getPagesCount(link) / 20 + 1;
+        for (int currentPage = 1; currentPage <= pageCount; currentPage++) {
+            String nextPageLink = link + PAGELINK + currentPage;
             doc = Jsoup.connect(nextPageLink).get();
-            nextPageLink = null;
-            if (nextPageHasAdvertisements(link, pageCount++)) {
-                nextPageLink = link + PAGELINK + pageCount;
-            }
             advertisementLinks.addAll(scrapAdvertisementLinksOnThePage());
-        } while (nextPageLink != null && pageCount < 5);
+        }
 
         return advertisementLinks;
     }
 
-    private boolean nextPageHasAdvertisements(String link, int i) throws IOException {
-        Document tempDoc = Jsoup.connect(link + PAGELINK + i).get();
-        return !tempDoc.getElementsByClass("announcement-item").isEmpty();
+    private int getPagesCount(String link) throws IOException {
+        Document tempDoc = Jsoup.connect(link).get();
+        return Integer.parseInt(tempDoc.getElementsByClass("result-count").text()
+                .replace("(", "")
+                .replace(")", ""));
     }
 
 
