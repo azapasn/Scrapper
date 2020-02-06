@@ -85,7 +85,7 @@ public class AutopliusScraper implements Scraper {
     public List<String> scrapAdvertisementLinks(String link) throws IOException {
         List<String> advertisementLinks = new ArrayList<>();
         int pageCount = getPagesCount(link) / 20 + 1;
-        for (int currentPage = 1; currentPage <= pageCount; currentPage++) {
+        for (int currentPage = 1; currentPage <= pageCount && currentPage < 5; currentPage++) {
             String nextPageLink = link + PAGELINK + currentPage;
             doc = Jsoup.connect(nextPageLink).get();
             advertisementLinks.addAll(scrapAdvertisementLinksOnThePage());
@@ -133,6 +133,9 @@ public class AutopliusScraper implements Scraper {
     private CarParam scrapParams() {
         CarParam carParams = new CarParam();
         Elements paramsElements = doc.getElementsByClass("parameter-row");
+        String[] tempTitle = doc.title().split(",")[0].split(" ");
+        carParams.setMake(tempTitle[0]);
+        carParams.setModel(tempTitle[1]);
         for (Element element : paramsElements) {
             String paramName;
             String paramValue;
@@ -145,12 +148,6 @@ public class AutopliusScraper implements Scraper {
                 paramValue = "ERROR";
             }
             switch (paramName) {
-                case "Markė":
-                    carParams.setMake(paramValue);
-                    break;
-                case "Modelis":
-                    carParams.setModel(paramValue);
-                    break;
                 case "Pagaminimo data":
                     carParams.setYears(paramValue);
                     break;
@@ -166,7 +163,7 @@ public class AutopliusScraper implements Scraper {
                 case "Rida":
                     carParams.setMileageKm(paramValue);
                     break;
-                case "Varomieji ratai":
+                case "Varantieji ratai":
                     carParams.setDriveTrain(paramValue);
                     break;
                 case "Defektai":
