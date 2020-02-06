@@ -11,8 +11,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.net.URL;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +22,6 @@ import java.util.List;
 public class AutogidasScraper implements Scraper {
     private final static Logger LOG = LoggerFactory.getLogger(AutogidasScraper.class);
     private final String PAGELINK = "?page=";
-    private final String IMAGE_DESTINATION_FOLDER = "C:\\Users\\Antanas\\Downloads\\Wrapper-master\\Scraper\\build\\images";
 
     private Document doc;
     private String link;
@@ -200,35 +198,6 @@ public class AutogidasScraper implements Scraper {
         }
 
         return imagesLinks;
-    }
-
-    private void downloadImagesFromLinksList(List<String> linksList, String id) {
-        int i = 0;
-        for (String link : linksList) {
-            String strImageName = i++ + "-" + link.substring(link.lastIndexOf("/") + 1);
-            System.out.println("Saving: " + strImageName + ", from: " + link);
-            try {
-                URL urlImage = new URL(link);
-                InputStream in = urlImage.openStream();
-                byte[] buffer = new byte[4096];
-                int n = -1;
-
-                File file = new File(IMAGE_DESTINATION_FOLDER + "/" + id + "/");
-                file.mkdir();
-                OutputStream os = new FileOutputStream(IMAGE_DESTINATION_FOLDER + "/" + id + "/" + strImageName);
-
-                while ((n = in.read(buffer)) != -1) {
-                    os.write(buffer, 0, n);
-                }
-
-                os.close();
-
-                System.out.println("Image saved");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private int scrapPrice() {

@@ -4,6 +4,7 @@ import lt.zapasnikas.carscraper.model.Advertisement;
 import lt.zapasnikas.carscraper.model.CarParam;
 import lt.zapasnikas.carscraper.model.Seller;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -41,10 +42,9 @@ public class AutopliusScraper implements Scraper {
         Advertisement advertisement = getAdvertisement();
         advertisement.setCarParams(carParams);
 
-        List<Advertisement> advertisements = new ArrayList<>();
-        advertisements.add(advertisement);
+        downloadImagesFromLinksList(getImagesLinks(), advertisement.getId());
 
-        seller.setAdvertisements(advertisements);
+        seller.addAdvertisement(advertisement);
 
         return seller;
     }
@@ -56,10 +56,9 @@ public class AutopliusScraper implements Scraper {
         Advertisement advertisement = getAdvertisement();
         advertisement.setCarParams(carParams);
 
-        List<Advertisement> advertisements = seller.getAdvertisements();
-        advertisements.add(advertisement);
+        downloadImagesFromLinksList(getImagesLinks(), advertisement.getId());
 
-        seller.setAdvertisements(advertisements);
+        seller.addAdvertisement(advertisement);
 
         return seller;
     }
@@ -85,7 +84,7 @@ public class AutopliusScraper implements Scraper {
     public List<String> scrapAdvertisementLinks(String link) throws IOException {
         List<String> advertisementLinks = new ArrayList<>();
         int pageCount = getPagesCount(link) / 20 + 1;
-        for (int currentPage = 1; currentPage <= pageCount && currentPage < 5; currentPage++) {
+        for (int currentPage = 1; currentPage <= pageCount && currentPage < 2; currentPage++) {
             String nextPageLink = link + PAGELINK + currentPage;
             doc = Jsoup.connect(nextPageLink).get();
             advertisementLinks.addAll(scrapAdvertisementLinksOnThePage());
@@ -180,6 +179,26 @@ public class AutopliusScraper implements Scraper {
             }
         }
         return carParams;
+    }
+
+    private List<String> getImagesLinks() {
+        List<String> imagesLinks = new ArrayList<>();
+        int i = 0;
+        for (Element element : doc.getElementsByTag("script")) {
+            for (DataNode dataNode : element.dataNodes()) {
+                if (dataNode.getWholeData().contains("mediaGalleryItems")) {
+                    for (String line : dataNode.getWholeData().split("\"")) {
+                        if (line.contains("autoplius-img.dgn")) {
+                            if (i % 2 == 0)
+                                imagesLinks.add(line.replace("\\", ""));
+                            i++;
+                        }
+                    }
+                }
+            }
+        }
+
+        return imagesLinks;
     }
 
 }
