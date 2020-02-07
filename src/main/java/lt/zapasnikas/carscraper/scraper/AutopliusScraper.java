@@ -1,6 +1,5 @@
 package lt.zapasnikas.carscraper.scraper;
 
-import lt.zapasnikas.carscraper.model.Advertisement;
 import lt.zapasnikas.carscraper.model.CarParam;
 import lt.zapasnikas.carscraper.model.Seller;
 import org.jsoup.Jsoup;
@@ -16,9 +15,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AutopliusScraper implements Scraper {
-    private final static Logger LOG = LoggerFactory.getLogger(AutopliusScraper.class);
-    private final String PAGELINK = "?page_nr=";
+public class AutopliusScraper extends AbstractScraper {
+    private static final Logger LOG = LoggerFactory.getLogger(AutopliusScraper.class);
+    private static final String PAGELINK = "?page_nr=";
 
     Document doc;
     String link;
@@ -28,40 +27,12 @@ public class AutopliusScraper implements Scraper {
         try {
             doc = Jsoup.connect(link).get();
         } catch (IOException e) {
-            LOG.error("Couldn't get a {} page with jsoup\n" + Arrays.toString(e.getStackTrace()), link);
+            LOG.error("Couldn't get a {} page with jsoup\n{}", link, Arrays.toString(e.getStackTrace()));
             throw new RuntimeException();
         }
     }
 
-    @Override
-    public Seller scrapAdvertisement(String link) {
-        Seller seller = scrapSeller();
 
-        CarParam carParams = scrapParams();
-
-        Advertisement advertisement = getAdvertisement();
-        advertisement.setCarParams(carParams);
-
-        downloadImagesFromLinksList(getImagesLinks(), advertisement.getId());
-
-        seller.addAdvertisement(advertisement);
-
-        return seller;
-    }
-
-    @Override
-    public Seller scrapAdvertisement(String link, Seller seller) {
-        CarParam carParams = scrapParams();
-
-        Advertisement advertisement = getAdvertisement();
-        advertisement.setCarParams(carParams);
-
-        downloadImagesFromLinksList(getImagesLinks(), advertisement.getId());
-
-        seller.addAdvertisement(advertisement);
-
-        return seller;
-    }
 
     public Seller scrapSeller() {
         Element phoneNumberElement = doc.getElementsByClass("owner-phone").first();
@@ -110,26 +81,19 @@ public class AutopliusScraper implements Scraper {
         return linksToScrap;
     }
 
-    private Advertisement getAdvertisement() {
-        Advertisement advertisement = new Advertisement();
-        advertisement.setLink(link);
-        advertisement.setPrice(scrapPrice());
-        advertisement.setId(scrapId());
-        return advertisement;
-    }
 
-    private String scrapId() {
+    public String scrapId() {
         return doc.getElementsByClass("announcement-id").last().text()
                 .replace("ID: ", "");
     }
 
-    private int scrapPrice() {
+    public int scrapPrice() {
         String priceString = doc.getElementsByClass("price").first().ownText();
         return Integer.parseInt(priceString
                 .replace(" ", ""));
     }
 
-    private CarParam scrapParams() {
+    public CarParam scrapParams() {
         CarParam carParams = new CarParam();
         Elements paramsElements = doc.getElementsByClass("parameter-row");
         String[] tempTitle = doc.title().split(",")[0].split(" ");
@@ -181,7 +145,7 @@ public class AutopliusScraper implements Scraper {
         return carParams;
     }
 
-    private List<String> getImagesLinks() {
+    public List<String> getImagesLinks() {
         List<String> imagesLinks = new ArrayList<>();
         int i = 0;
         for (Element element : doc.getElementsByTag("script")) {
@@ -200,5 +164,4 @@ public class AutopliusScraper implements Scraper {
 
         return imagesLinks;
     }
-
 }

@@ -21,6 +21,9 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
 class PageScrapingServiceTest {
+    private static final String LINK = "advertisementlink";
+    private static final String AUTOGIDAS_LINK = "https://autogidas.lt/skelbimas/audi-a6-dyzelinas--2001-m-sedanas-0132853703.html";
+
     @InjectMocks
     private PageScrapingService pageScrapingService;
     @Mock
@@ -42,4 +45,6 @@ class PageScrapingServiceTest {
         Truth.assertThat(result).isEqualTo(retList);
         verify(sellersRepository, times(1)).findAll();
     }
+
+
 }

@@ -1,6 +1,5 @@
 package lt.zapasnikas.carscraper.scraper;
 
-import lt.zapasnikas.carscraper.model.Advertisement;
 import lt.zapasnikas.carscraper.model.CarParam;
 import lt.zapasnikas.carscraper.model.Seller;
 import org.jsoup.Jsoup;
@@ -19,58 +18,21 @@ import java.util.List;
 
 
 
-public class AutogidasScraper implements Scraper {
-    private final static Logger LOG = LoggerFactory.getLogger(AutogidasScraper.class);
-    private final String PAGELINK = "?page=";
+public class AutogidasScraper extends AbstractScraper {
+    private static final Logger LOG = LoggerFactory.getLogger(AutogidasScraper.class);
+    private static final String PAGELINK = "?page=";
 
     private Document doc;
-    private String link;
+    String link;
 
     public AutogidasScraper(String link) {
         this.link = link;
         try {
             doc = Jsoup.connect(link).get();
         } catch (IOException e) {
-            LOG.error("Couldn't get a {} page with jsoup\n" + Arrays.toString(e.getStackTrace()), link);
+            LOG.error("Couldn't get a {} page with jsoup\n {}", link, Arrays.toString(e.getStackTrace()));
             throw new RuntimeException();
         }
-    }
-
-    @Override
-    public Seller scrapAdvertisement(String link) {
-        Seller seller = scrapSeller();
-
-
-        CarParam carParam = scrapParams();
-
-        Advertisement advertisement = getAdvertisement();
-        advertisement.setCarParams(carParam);
-
-
-        downloadImagesFromLinksList(getImagesLinks(), advertisement.getId());
-
-
-        seller.addAdvertisement(advertisement);
-
-        return seller;
-    }
-
-    @Override
-    public Seller scrapAdvertisement(String link, Seller seller) {
-        CarParam carParam = scrapParams();
-
-        Advertisement advertisement = getAdvertisement();
-        advertisement.setCarParams(carParam);
-
-        List<Advertisement> advertisements = seller.getAdvertisements();
-        advertisements.add(advertisement);
-
-        downloadImagesFromLinksList(getImagesLinks(), advertisement.getId());
-
-
-        seller.setAdvertisements(advertisements);
-
-        return seller;
     }
 
     @Override
@@ -121,19 +83,11 @@ public class AutogidasScraper implements Scraper {
         return linksToScrap;
     }
 
-    private Advertisement getAdvertisement() {
-        Advertisement advertisement = new Advertisement();
-        advertisement.setLink(link);
-        advertisement.setPrice(scrapPrice());
-        advertisement.setId(scrapId());
-        return advertisement;
-    }
-
-    private String scrapId() {
+    public String scrapId() {
         return doc.getElementsByClass("times-item-right").last().ownText();
     }
 
-    private CarParam scrapParams() {
+    public CarParam scrapParams() {
         Element paramBlockElement = doc.getElementsByClass("params-block").last();
         Elements paramsElements = paramBlockElement.getElementsByClass("param");
         CarParam carParam = new CarParam();
@@ -182,7 +136,7 @@ public class AutogidasScraper implements Scraper {
         return carParam;
     }
 
-    private List<String> getImagesLinks() {
+    public List<String> getImagesLinks() {
         List<String> imagesLinks = new ArrayList<>();
         for (Element element : doc.getElementsByTag("script")) {
             for (DataNode dataNode : element.dataNodes()) {
@@ -200,10 +154,11 @@ public class AutogidasScraper implements Scraper {
         return imagesLinks;
     }
 
-    private int scrapPrice() {
+    public int scrapPrice() {
         String priceString = doc.getElementsByClass("price").first().ownText();
         return Integer.parseInt(priceString
                 .replace("€", "")
                 .replace(" ", ""));
     }
+
 }

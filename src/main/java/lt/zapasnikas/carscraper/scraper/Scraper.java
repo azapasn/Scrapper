@@ -1,14 +1,13 @@
 package lt.zapasnikas.carscraper.scraper;
 
+import lt.zapasnikas.carscraper.model.Advertisement;
+import lt.zapasnikas.carscraper.model.CarParam;
 import lt.zapasnikas.carscraper.model.Seller;
 
-import java.io.*;
-import java.net.URL;
+import java.io.IOException;
 import java.util.List;
 
 public interface Scraper {
-    String IMAGE_DESTINATION_FOLDER = "C:\\Users\\Antanas\\Downloads\\Wrapper-master\\Scraper\\build\\images";
-
     Seller scrapSeller();
 
     Seller scrapAdvertisement(String link);
@@ -17,33 +16,14 @@ public interface Scraper {
 
     List<String> scrapAdvertisementLinks(String link) throws IOException;
 
-    default void downloadImagesFromLinksList(List<String> linksList, String id) {
-        int i = 0;
-        for (String link : linksList) {
+    CarParam scrapParams();
 
-            String strImageName = i++ + "-" + link.substring(link.lastIndexOf("/") + 1);
-            System.out.println("Saving: " + strImageName + ", from: " + link);
-            try {
-                URL urlImage = new URL(link);
-                InputStream in = urlImage.openStream();
-                byte[] buffer = new byte[4096];
-                int n;
+    List<String> getImagesLinks();
 
-                File file = new File(IMAGE_DESTINATION_FOLDER + "/" + id + "/");
-                file.mkdir();
-                OutputStream os = new FileOutputStream(IMAGE_DESTINATION_FOLDER + "/" + id + "/" + strImageName);
+    int scrapPrice();
 
-                while ((n = in.read(buffer)) != -1) {
-                    os.write(buffer, 0, n);
-                }
+    String scrapId();
 
-                os.close();
+    Advertisement getAdvertisement();
 
-                System.out.println("Image saved");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class Advertisement {
     @Id
     @Column
-    private String Id;
+    private String id;
     @Column
     private String link;
     @JsonIgnore
@@ -31,11 +31,11 @@ public class Advertisement {
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        this.Id = id;
+        this.id = id;
     }
 
 

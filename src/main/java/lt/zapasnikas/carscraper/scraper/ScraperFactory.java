@@ -2,6 +2,9 @@ package lt.zapasnikas.carscraper.scraper;
 
 
 public class ScraperFactory {
+    private ScraperFactory() {
+    }
+
     public static Scraper getScrapperByLink(String link) {
         if (link.contains("autogidas")) {
             return new AutogidasScraper(link);

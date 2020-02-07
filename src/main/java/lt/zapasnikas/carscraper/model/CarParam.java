@@ -41,10 +41,6 @@ public class CarParam {
     private String licensePlate;
 
 
-    public CarParam() {
-
-    }
-
     public String getYears() {
         return years;
     }
