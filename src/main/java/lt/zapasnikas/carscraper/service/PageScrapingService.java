@@ -4,7 +4,6 @@ import lt.zapasnikas.carscraper.model.Advertisement;
 import lt.zapasnikas.carscraper.model.CarParam;
 import lt.zapasnikas.carscraper.model.Seller;
 import lt.zapasnikas.carscraper.repository.AdvertisementRepository;
-import lt.zapasnikas.carscraper.repository.CarParamRepository;
 import lt.zapasnikas.carscraper.repository.SellersRepository;
 import lt.zapasnikas.carscraper.scraper.Scraper;
 import lt.zapasnikas.carscraper.scraper.ScraperFactory;
@@ -19,12 +18,10 @@ import java.util.stream.Collectors;
 public class PageScrapingService {
     private SellersRepository sellersRepository;
     private AdvertisementRepository advertisementRepository;
-    private CarParamRepository carParamRepository;
 
-    public PageScrapingService(SellersRepository sellersRepository, AdvertisementRepository advertisementRepository, CarParamRepository carParamRepository) {
+    public PageScrapingService(SellersRepository sellersRepository, AdvertisementRepository advertisementRepository) {
         this.sellersRepository = sellersRepository;
         this.advertisementRepository = advertisementRepository;
-        this.carParamRepository = carParamRepository;
     }
 
     public void scrapAllAdvertisementsBySearchLink(String link) throws IOException {
@@ -37,7 +34,6 @@ public class PageScrapingService {
                 .collect(Collectors.toList())
                 .forEach(this::saveAll);
     }
-
 
     private boolean advertisementMissingInDb(Seller seller) {
         if (seller.getAdvertisements().isEmpty()) {
@@ -54,9 +50,9 @@ public class PageScrapingService {
         Seller seller = scraper.scrapSeller();
         Optional<Seller> sellerFromDatabase = sellersRepository.findById(seller.getPhoneNumber());
         if (sellerFromDatabase.isPresent() && sellerFromDatabase.get().getPhoneNumber().equals(seller.getPhoneNumber())) {
-            sellerToSave = scraper.scrapAdvertisement(link, sellerFromDatabase.get());
+            sellerToSave = scraper.scrapAdWithExistingSeller(link, sellerFromDatabase.get());
         } else {
-            sellerToSave = scraper.scrapAdvertisement(link);
+            sellerToSave = scraper.scrapAdWithNewSeller(link, seller);
         }
         return sellerToSave;
     }

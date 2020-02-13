@@ -82,18 +82,18 @@ public class AutopliusScraper extends AbstractScraper {
     }
 
 
-    public String scrapId() {
+    String scrapId() {
         return doc.getElementsByClass("announcement-id").last().text()
                 .replace("ID: ", "");
     }
 
-    public int scrapPrice() {
+    int scrapPrice() {
         String priceString = doc.getElementsByClass("price").first().ownText();
         return Integer.parseInt(priceString
                 .replace(" ", ""));
     }
 
-    public CarParam scrapParams() {
+    CarParam scrapParams() {
         CarParam carParams = new CarParam();
         Elements paramsElements = doc.getElementsByClass("parameter-row");
         String[] tempTitle = doc.title().split(",")[0].split(" ");
@@ -145,7 +145,7 @@ public class AutopliusScraper extends AbstractScraper {
         return carParams;
     }
 
-    public List<String> getImagesLinks() {
+    List<String> getImagesLinks() {
         List<String> imagesLinks = new ArrayList<>();
         int i = 0;
         for (Element element : doc.getElementsByTag("script")) {

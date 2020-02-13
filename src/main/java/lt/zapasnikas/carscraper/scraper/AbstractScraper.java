@@ -16,6 +16,14 @@ public abstract class AbstractScraper implements Scraper {
     private static final String IMAGE_DESTINATION_FOLDER = "C:\\Users\\Antanas\\Downloads\\Wrapper-master\\Scraper\\build\\images";
     private String link;
 
+    abstract CarParam scrapParams();
+
+    abstract String scrapId();
+
+    abstract int scrapPrice();
+
+    abstract List<String> getImagesLinks();
+
 
     public void downloadImagesFromLinksList(List<String> linksList, String id) {
         int i = 0;
@@ -52,9 +60,8 @@ public abstract class AbstractScraper implements Scraper {
     }
 
     @Override
-    public Seller scrapAdvertisement(String link) {
+    public Seller scrapAdWithNewSeller(String link, Seller seller) {
         this.link = link;
-        Seller seller = scrapSeller();
 
         CarParam carParam = scrapParams();
 
@@ -69,7 +76,7 @@ public abstract class AbstractScraper implements Scraper {
     }
 
     @Override
-    public Seller scrapAdvertisement(String link, Seller seller) {
+    public Seller scrapAdWithExistingSeller(String link, Seller seller) {
         this.link = link;
         CarParam carParam = scrapParams();
 

@@ -5,24 +5,33 @@ import lt.zapasnikas.carscraper.model.Seller;
 import lt.zapasnikas.carscraper.repository.AdvertisementRepository;
 import lt.zapasnikas.carscraper.repository.CarParamRepository;
 import lt.zapasnikas.carscraper.repository.SellersRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
+import lt.zapasnikas.carscraper.scraper.AutogidasScraper;
+import lt.zapasnikas.carscraper.scraper.NotSupportedWebException;
+import lt.zapasnikas.carscraper.scraper.Scraper;
+import lt.zapasnikas.carscraper.scraper.ScraperFactory;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-@RunWith(JUnitPlatform.class)
+@PrepareForTest({Jsoup.class, AutogidasScraper.class})
+@RunWith(PowerMockRunner.class)
 class PageScrapingServiceTest {
     private static final String LINK = "advertisementlink";
-    private static final String AUTOGIDAS_LINK = "https://autogidas.lt/skelbimas/audi-a6-dyzelinas--2001-m-sedanas-0132853703.html";
+    private static final String AUTOGIDAS_LINK = "autogidas.lt";
 
     @InjectMocks
     private PageScrapingService pageScrapingService;
@@ -32,6 +41,20 @@ class PageScrapingServiceTest {
     private AdvertisementRepository advertisementRepository;
     @Mock
     private CarParamRepository carParamRepository;
+    @Mock
+    private Connection connection;
+    @Mock
+    private Document document;
+    @Mock
+    private Seller seller;
+    @Mock
+    private AutogidasScraper autogidasScraper;
+    @Mock
+    private Scraper scraper;
+
+
+    public PageScrapingServiceTest() {
+    }
 
     @Test
     public void testGetDataFromSellersRepository() {
@@ -46,5 +69,23 @@ class PageScrapingServiceTest {
         verify(sellersRepository, times(1)).findAll();
     }
 
+    @Test(expected = NotSupportedWebException.class)
+    public void testUnsupportedAdvertisementLink() {
+        pageScrapingService.scrapSinglePage(LINK);
+    }
+
+    @Test
+    public void test() throws IOException {
+        Mockito.when(connection.get()).thenReturn(document);
+        PowerMockito.mockStatic(Jsoup.class);
+        PowerMockito.when(Jsoup.connect(AUTOGIDAS_LINK)).thenReturn(connection);
+        PowerMockito.mockStatic(ScraperFactory.class);
+        //Mockito.when(scraperFactory.getScrapperByLink(AUTOGIDAS_LINK)).thenReturn(autogidasScraper);
+        Mockito.when(autogidasScraper.scrapSeller()).thenReturn(seller);
+        pageScrapingService.scrapSinglePage(AUTOGIDAS_LINK);
+
+
+        System.out.println();
+    }
 
 }

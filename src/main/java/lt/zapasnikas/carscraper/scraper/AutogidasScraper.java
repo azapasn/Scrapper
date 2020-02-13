@@ -25,6 +25,9 @@ public class AutogidasScraper extends AbstractScraper {
     private Document doc;
     String link;
 
+    public AutogidasScraper() {
+    }
+
     public AutogidasScraper(String link) {
         this.link = link;
         try {
@@ -83,11 +86,11 @@ public class AutogidasScraper extends AbstractScraper {
         return linksToScrap;
     }
 
-    public String scrapId() {
+    String scrapId() {
         return doc.getElementsByClass("times-item-right").last().ownText();
     }
 
-    public CarParam scrapParams() {
+    CarParam scrapParams() {
         Element paramBlockElement = doc.getElementsByClass("params-block").last();
         Elements paramsElements = paramBlockElement.getElementsByClass("param");
         CarParam carParam = new CarParam();
@@ -136,7 +139,7 @@ public class AutogidasScraper extends AbstractScraper {
         return carParam;
     }
 
-    public List<String> getImagesLinks() {
+    List<String> getImagesLinks() {
         List<String> imagesLinks = new ArrayList<>();
         for (Element element : doc.getElementsByTag("script")) {
             for (DataNode dataNode : element.dataNodes()) {
@@ -154,7 +157,7 @@ public class AutogidasScraper extends AbstractScraper {
         return imagesLinks;
     }
 
-    public int scrapPrice() {
+    int scrapPrice() {
         String priceString = doc.getElementsByClass("price").first().ownText();
         return Integer.parseInt(priceString
                 .replace("€", "")
