@@ -112,7 +112,7 @@ public class AutopliusScraper extends AbstractScraper {
             }
             switch (paramName) {
                 case "Pagaminimo data":
-                    carParams.setYears(paramValue);
+                    carParams.setYearsProd(paramValue);
                     break;
                 case "Variklis":
                     carParams.setEngine(paramValue);

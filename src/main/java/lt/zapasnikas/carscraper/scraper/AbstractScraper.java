@@ -37,9 +37,7 @@ public abstract class AbstractScraper implements Scraper {
                 LOG.error("URL reading error\n {}", e.getStackTrace());
                 return;
             }
-            try (OutputStream os =
-                         new FileOutputStream(IMAGE_DESTINATION_FOLDER + "/" + id + "/" + strImageName);
-                 InputStream in = urlImage.openStream()) {
+            try (InputStream in = urlImage.openStream()) {
 
 
                 byte[] buffer = new byte[4096];
@@ -47,6 +45,7 @@ public abstract class AbstractScraper implements Scraper {
 
                 File file = new File(IMAGE_DESTINATION_FOLDER + '/' + id);
                 file.mkdir();
+                OutputStream os = new FileOutputStream(IMAGE_DESTINATION_FOLDER + "/" + id + "/" + strImageName);
                 while ((n = in.read(buffer)) != -1) {
                     os.write(buffer, 0, n);
                 }

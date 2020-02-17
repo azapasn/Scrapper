@@ -21,10 +21,10 @@ public class CarParamTest {
         carParam.setFuelType("fuel");
         carParam.setMileageKm("mileage");
         carParam.setVinCode("vin");
-        carParam.setYears("years");
+        carParam.setYearsProd("years");
         carParam.setAdvertisement(advertisement);
         carParam.setId(1);
-        carParam.setLicensePlate("ABC123");
+        carParam.setLicencePlate("ABC123");
     }
 
     @Test
@@ -40,9 +40,9 @@ public class CarParamTest {
         Truth.assertThat(carParam.getFuelType()).isEqualTo("fuel");
         Truth.assertThat(carParam.getMileageKm()).isEqualTo("mileage");
         Truth.assertThat(carParam.getVinCode()).isEqualTo("vin");
-        Truth.assertThat(carParam.getYears()).isEqualTo("years");
+        Truth.assertThat(carParam.getYearsProd()).isEqualTo("years");
         Truth.assertThat(carParam.getId()).isEqualTo(1);
-        Truth.assertThat(carParam.getLicensePlate()).isEqualTo("ABC123");
+        Truth.assertThat(carParam.getLicencePlate()).isEqualTo("ABC123");
     }
 
     @Test
@@ -58,9 +58,9 @@ public class CarParamTest {
         Truth.assertThat(carParam.getFuelType()).isNotEqualTo("newFuel");
         Truth.assertThat(carParam.getMileageKm()).isNotEqualTo("newMileage");
         Truth.assertThat(carParam.getVinCode()).isNotEqualTo("newVin");
-        Truth.assertThat(carParam.getYears()).isNotEqualTo("newYears");
+        Truth.assertThat(carParam.getYearsProd()).isNotEqualTo("newYears");
         Truth.assertThat(carParam.getId()).isNotEqualTo(2);
-        Truth.assertThat(carParam.getLicensePlate()).isNotEqualTo("newLicencePlate");
+        Truth.assertThat(carParam.getLicencePlate()).isNotEqualTo("newLicencePlate");
     }
 
 }

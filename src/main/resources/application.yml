@@ -14,7 +14,8 @@ spring:
     hikari:
       connectionTimeout: 20000
       maximumPoolSize: 5
-    url: jdbc:postgresql://212.24.102.163:8401/root
+    url: jdbc:postgresql://localhost:5432/root
     username: root
     password: abc123
-
+liquibase:
+  change-log: db/changelog/db.changelog-master.yaml

@@ -1,12 +1,10 @@
 package lt.zapasnikas.carscraper.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 
 import javax.persistence.*;
 
 @Entity
-@Data
 public class CarParam {
     @Id
     @GeneratedValue
@@ -20,7 +18,7 @@ public class CarParam {
     @Column
     private String model;
     @Column
-    private String years;
+    private String yearsProd;
     @Column
     private String engine;
     @Column
@@ -38,15 +36,15 @@ public class CarParam {
     @Column
     private String firstRegistrationCountry;
     @Column
-    private String licensePlate;
+    private String licencePlate;
 
 
-    public String getYears() {
-        return years;
+    public String getYearsProd() {
+        return yearsProd;
     }
 
-    public void setYears(String years) {
-        this.years = years;
+    public void setYearsProd(String yearsProd) {
+        this.yearsProd = yearsProd;
     }
 
     public String getEngine() {
@@ -113,12 +111,12 @@ public class CarParam {
         this.firstRegistrationCountry = firstRegistrationCountry;
     }
 
-    public String getLicensePlate() {
-        return licensePlate;
+    public String getLicencePlate() {
+        return licencePlate;
     }
 
-    public void setLicensePlate(String licensePlate) {
-        this.licensePlate = licensePlate;
+    public void setLicencePlate(String licencePlate) {
+        this.licencePlate = licencePlate;
     }
 
     public long getId() {

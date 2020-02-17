@@ -106,7 +106,7 @@ public class AutogidasScraper extends AbstractScraper {
                     carParam.setModel(paramValue);
                     break;
                 case "Metai":
-                    carParam.setYears(paramValue);
+                    carParam.setYearsProd(paramValue);
                     break;
                 case "Variklis":
                     carParam.setEngine(paramValue);
