@@ -1,5 +1,6 @@
 package lt.zapasnikas.carscraper.controller;
 
+import lt.zapasnikas.carscraper.model.Advertisement;
 import lt.zapasnikas.carscraper.model.Seller;
 import lt.zapasnikas.carscraper.service.PageScrapingService;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,30 @@ public class PageScrapingController {
     public ResponseEntity<List<Seller>> getSellers() {
         List<Seller> sellers = pageScrapingService.getData();
         return new ResponseEntity<>(sellers, HttpStatus.OK);
+    }
+
+    @GetMapping("/get/phone")
+    public ResponseEntity<List<Advertisement>> getAdvertisementsByPhoneNumber(@PathParam("number") String number) {
+        List<Advertisement> advertisements = pageScrapingService.getAdvertisementsByPhoneNumber(number);
+        if (advertisements.size() > 0) {
+            return new ResponseEntity<>(advertisements, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(advertisements, HttpStatus.EXPECTATION_FAILED);
+    }
+
+    @GetMapping("get/vin")
+    public ResponseEntity<List<Advertisement>> getAdvertisementsByVinCode(@PathParam("vin") String vin) {
+        List<Advertisement> advertisements = pageScrapingService.getAdvertisementsByVinCode(vin);
+        if (advertisements.size() > 0) {
+            return new ResponseEntity<>(advertisements, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(advertisements, HttpStatus.EXPECTATION_FAILED);
+    }
+
+    @GetMapping("get/plate")
+    public ResponseEntity<List<Advertisement>> getAdvertisementsByLicencePlate(@PathParam("plate") String plate) {
+        List<Advertisement> advertisements = pageScrapingService.getAdvertisementsByLicencePlate(plate);
+        return new ResponseEntity<>(advertisements, HttpStatus.OK);
     }
 
 }

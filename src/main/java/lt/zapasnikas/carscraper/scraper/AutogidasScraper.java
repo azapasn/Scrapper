@@ -46,7 +46,9 @@ public class AutogidasScraper extends AbstractScraper {
         String sellerLocation;
         try {
             phoneNumber = phoneNumberElement.ownText()
-                    .replace(" ", "");
+                    .replace(" ", "")
+                    .replace("+370", "_");
+
             sellerLocation = sellerLocationElement.ownText();
 
         } catch (NullPointerException e) {

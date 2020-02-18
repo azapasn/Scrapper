@@ -10,6 +10,7 @@ import lt.zapasnikas.carscraper.scraper.ScraperFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,7 +69,41 @@ public class PageScrapingService {
         return sellersRepository.save(seller);
     }
 
-    public List<Seller> getData(){
+    public List<Seller> getData() {
         return sellersRepository.findAll();
+    }
+
+    public Seller getSellerByPhoneNumber(String phoneNumber) {
+        Seller seller = sellersRepository.findById(phoneNumber).orElse(new Seller());
+        //TODO _number_number, contains() or etc.
+        return seller;
+    }
+
+    public List<Advertisement> getAdvertisementsByPhoneNumber(String phoneNumber) {
+        String tempNumber = phoneNumber.replace("+370", "_")
+                .replace(" 370", "_");
+        Seller seller = getSellerByPhoneNumber(tempNumber);
+        List<Advertisement> advertisements = seller.getAdvertisements();
+        return advertisements;
+    }
+
+    public List<Advertisement> getAdvertisementsByVinCode(String vinCode) {
+        List<Advertisement> advertisements = new ArrayList<>();
+        for (Advertisement adv : advertisementRepository.findAll()) {
+            if (adv.getCarParam().getVinCode() != null && adv.getCarParam().getVinCode().equals(vinCode)) {
+                advertisements.add(adv);
+            }
+        }
+        return advertisements;
+    }
+
+    public List<Advertisement> getAdvertisementsByLicencePlate(String licencePlate) {
+        List<Advertisement> advertisements = new ArrayList<>();
+        for (Advertisement adv : advertisementRepository.findAll()) {
+            if (adv.getCarParam().getLicencePlate() == licencePlate) {
+                advertisements.add(adv);
+            }
+        }
+        return advertisements;
     }
 }

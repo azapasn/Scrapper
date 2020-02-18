@@ -41,7 +41,8 @@ public class AutopliusScraper extends AbstractScraper {
         String sellerLocation;
         try {
             phoneNumber = phoneNumberElement.text()
-                    .replace(" ", "");
+                    .replace(" ", "")
+                    .replace("+370", "_");
             sellerLocation = sellerLocationElement.text();
 
         } catch (NullPointerException e) {

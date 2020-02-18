@@ -38,7 +38,6 @@ public class CarParam {
     @Column
     private String licencePlate;
 
-
     public String getYearsProd() {
         return yearsProd;
     }
