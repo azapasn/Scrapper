@@ -38,11 +38,11 @@ public class PageScrapingController {
         List<Seller> sellers = pageScrapingService.getData();
         return new ResponseEntity<>(sellers, HttpStatus.OK);
     }
-
+    //TODO One get method with different param: /get/?number=, /get/?vin=, /get/?plate=
     @GetMapping("/get/phone")
     public ResponseEntity<List<Advertisement>> getAdvertisementsByPhoneNumber(@PathParam("number") String number) {
         List<Advertisement> advertisements = pageScrapingService.getAdvertisementsByPhoneNumber(number);
-        if (advertisements.size() > 0) {
+        if (!advertisements.isEmpty()) {
             return new ResponseEntity<>(advertisements, HttpStatus.OK);
         }
         return new ResponseEntity<>(advertisements, HttpStatus.EXPECTATION_FAILED);
@@ -51,7 +51,7 @@ public class PageScrapingController {
     @GetMapping("get/vin")
     public ResponseEntity<List<Advertisement>> getAdvertisementsByVinCode(@PathParam("vin") String vin) {
         List<Advertisement> advertisements = pageScrapingService.getAdvertisementsByVinCode(vin);
-        if (advertisements.size() > 0) {
+        if (!advertisements.isEmpty()) {
             return new ResponseEntity<>(advertisements, HttpStatus.OK);
         }
         return new ResponseEntity<>(advertisements, HttpStatus.EXPECTATION_FAILED);
@@ -60,7 +60,10 @@ public class PageScrapingController {
     @GetMapping("get/plate")
     public ResponseEntity<List<Advertisement>> getAdvertisementsByLicencePlate(@PathParam("plate") String plate) {
         List<Advertisement> advertisements = pageScrapingService.getAdvertisementsByLicencePlate(plate);
-        return new ResponseEntity<>(advertisements, HttpStatus.OK);
+        if (!advertisements.isEmpty()) {
+            return new ResponseEntity<>(advertisements, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(advertisements, HttpStatus.EXPECTATION_FAILED);
     }
 
 }

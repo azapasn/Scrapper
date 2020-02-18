@@ -10,7 +10,6 @@ import lt.zapasnikas.carscraper.scraper.ScraperFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -83,27 +82,14 @@ public class PageScrapingService {
         String tempNumber = phoneNumber.replace("+370", "_")
                 .replace(" 370", "_");
         Seller seller = getSellerByPhoneNumber(tempNumber);
-        List<Advertisement> advertisements = seller.getAdvertisements();
-        return advertisements;
+        return seller.getAdvertisements();
     }
 
     public List<Advertisement> getAdvertisementsByVinCode(String vinCode) {
-        List<Advertisement> advertisements = new ArrayList<>();
-        for (Advertisement adv : advertisementRepository.findAll()) {
-            if (adv.getCarParam().getVinCode() != null && adv.getCarParam().getVinCode().equals(vinCode)) {
-                advertisements.add(adv);
-            }
-        }
-        return advertisements;
+        return advertisementRepository.findAdvertisementsByCarParam_VinCode(vinCode);
     }
 
     public List<Advertisement> getAdvertisementsByLicencePlate(String licencePlate) {
-        List<Advertisement> advertisements = new ArrayList<>();
-        for (Advertisement adv : advertisementRepository.findAll()) {
-            if (adv.getCarParam().getLicencePlate() == licencePlate) {
-                advertisements.add(adv);
-            }
-        }
-        return advertisements;
+        return advertisementRepository.findAdvertisementsByCarParam_LicencePlate(licencePlate);
     }
 }
