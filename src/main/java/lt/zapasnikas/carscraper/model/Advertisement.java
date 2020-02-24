@@ -3,6 +3,7 @@ package lt.zapasnikas.carscraper.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class Advertisement {
@@ -14,11 +15,16 @@ public class Advertisement {
     @JsonIgnore
     @ManyToOne
     private Seller seller;
+    @Column
     private int price;
+
+    @Column(insertable = false, updatable = false)
+    private LocalDateTime creationDate;
 
 
     @OneToOne(mappedBy = "advertisement", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private CarParam carParam;
+
 
     public int getPrice() {
         return price;
@@ -63,6 +69,14 @@ public class Advertisement {
 
     public String toString() {
         return getId();
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 
 }

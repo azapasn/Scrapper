@@ -72,17 +72,9 @@ public class PageScrapingService {
         return sellersRepository.findAll();
     }
 
-    public Seller getSellerByPhoneNumber(String phoneNumber) {
-        Seller seller = sellersRepository.findById(phoneNumber).orElse(new Seller());
-        //TODO _number_number, contains() or etc.
-        return seller;
-    }
 
     public List<Advertisement> getAdvertisementsByPhoneNumber(String phoneNumber) {
-        String tempNumber = phoneNumber.replace("+370", "_")
-                .replace(" 370", "_");
-        Seller seller = getSellerByPhoneNumber(tempNumber);
-        return seller.getAdvertisements();
+        return advertisementRepository.findAdsByPhoneNumber(phoneNumber);
     }
 
     public List<Advertisement> getAdvertisementsByVinCode(String vinCode) {
@@ -92,4 +84,5 @@ public class PageScrapingService {
     public List<Advertisement> getAdvertisementsByLicencePlate(String licencePlate) {
         return advertisementRepository.findAdvertisementsByCarParam_LicencePlate(licencePlate);
     }
+
 }

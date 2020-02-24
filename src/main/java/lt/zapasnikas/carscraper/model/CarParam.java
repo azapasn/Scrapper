@@ -3,6 +3,9 @@ package lt.zapasnikas.carscraper.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 @Entity
 public class CarParam {
@@ -37,6 +40,24 @@ public class CarParam {
     private String firstRegistrationCountry;
     @Column
     private String licencePlate;
+    @Column(insertable = false, updatable = false)
+    private LocalDateTime creationDate;
+
+    public String getCreationDate() {
+        return creationDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
+    public int getCreationYear() {
+        return creationDate.getYear();
+    }
+
+    public int getCreationMonth() {
+        return creationDate.getMonthValue();
+    }
+
+    public int getCreationDay() {
+        return creationDate.getDayOfMonth();
+    }
 
     public String getYearsProd() {
         return yearsProd;

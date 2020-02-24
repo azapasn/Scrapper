@@ -27,8 +27,11 @@
                     <div class="input-group-prepend">
                         <div class="input-group-text">+370</div>
                     </div>
-                    <input class="form-control text-center" ng-model='number' placeholder="Telefono numeris"
-                           type="text">
+                    <input class="form-control text-center"
+                           ng-model='number' onkeydown='this.value=this.value.substring(0,8);
+                           return (event.which >= 48 && event.which <= 57)
+                           || event.which === 8 || event.which === 46'
+                           placeholder="Telefono numeris" type="text">
                 </div>
                 <button class="btn btn-lg btn-block btn-outline-dark" ng-click='checkPhone(number)' type="button">
                     Patikrinti
@@ -40,7 +43,8 @@
                 <h4 class="my-0 font-weight-normal">VIN kodas</h4>
             </div>
             <div class="card-body">
-                <input class="form-control mb-3 mr-sm-3 text-center" ng-model="vin"
+                <input class="form-control mb-3 mr-sm-3 text-center text-uppercase"
+                       ng-model="vin" onkeypress="this.value=this.value.substring(0,17)"
                        placeholder="automobilio VIN"
                        type="text">
                 <button class="btn btn-lg btn-block btn-outline-dark" ng-click="checkVin(vin)" type="button">
@@ -73,6 +77,8 @@
                 <td>{{advertisement.carParam.mileageKm}}</td>
                 <td>{{advertisement.carParam.adCreationDate}}</td>
                 <td>{{advertisement.carParam.licencePlate}}</td>
+                <td>{{advertisement.carParam.fuelType}}</td>
+                <td>{{advertisement.carParam.creationDate}}</td>
             </tr>
             </tbody>
         </table>

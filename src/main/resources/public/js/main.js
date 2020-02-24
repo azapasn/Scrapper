@@ -3,7 +3,7 @@ var app = angular.module('app', []);
 app.controller('mainCtrl', function ($http, $scope) {
     $scope.checkPhone = function (number) {
         $scope.advertisements = null;
-        var url = "http://localhost:8080/get/phone/?number=+370" + number;
+        var url = "http://localhost:8080/get/phone/?number=" + number;
         $http.get(url)
             .then(function (result) {
                     $scope.advertisements = JSON.parse(JSON.stringify(result["data"]));
